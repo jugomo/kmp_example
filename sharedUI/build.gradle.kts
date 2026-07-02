@@ -9,6 +9,21 @@ plugins {
 }
 
 kotlin {
+    // 1. Declaramos los procesadores de Apple
+    val iosTargets = listOf(
+        iosArm64(),
+        iosSimulatorArm64()
+    )
+
+    // 2. Le decimos a Kotlin cómo construir el framework final para Xcode
+    iosTargets.forEach { target ->
+        target.binaries.framework {
+            baseName = "shared" // Volvemos a "shared" para no romper el build actual
+            isStatic = true
+            export(projects.sharedLogic)
+        }
+    }
+    
     jvm()
     
     js {
